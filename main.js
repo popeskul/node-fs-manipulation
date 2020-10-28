@@ -73,12 +73,18 @@ request(URL, (error, res, body) => {
 
     // step 4 - add images to the file
     result.forEach((str) => {
-      fs.appendFileSync(`${FOLDER1}/${ALL_IMAGES}`, `${str}\n`, (err) => {
-        if (err) throw err;
-      });
+      fs.appendFileSync(
+        `${FOLDER1}/${ALL_IMAGES}`,
+        `<img src="${str}" />\n`,
+        (err) => {
+          if (err) throw err;
+        }
+      );
     });
 
-    const PORT = 8080;
+    // step 4 - add server
+    // settings for server
+    const PORT = 3000;
     const options = {
       key: fs.readFileSync('key.pem').toString(),
       cert: fs.readFileSync('cert.pem').toString()
@@ -91,12 +97,12 @@ request(URL, (error, res, body) => {
       });
 
       var s = fs.createReadStream(file);
-      res.write('asd');
       s.on('open', function () {
         s.pipe(res);
       });
     });
 
+    // start server
     server.listen(PORT, 'localhost', (err) => {
       if (err) throw err;
       console.log('https server start');
