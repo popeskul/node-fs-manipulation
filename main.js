@@ -2,6 +2,7 @@ const request = require('request');
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
+const generatePairs = require('./generatePairs');
 
 const URL = 'https://dou.ua/';
 const startRedomendedBlock = '<div class="b-footer-slider m-hide">';
@@ -11,6 +12,7 @@ const endUrl = '" srcset=';
 
 const FILE_IMAGE = 'image.svg';
 const ALL_IMAGES = 'arr.txt';
+const NUMBERS = 'numbers.txt';
 const FOLDER1 = 'folder1';
 const FOLDER2 = 'folder2';
 const dir = path.join(__dirname, FOLDER1);
@@ -46,6 +48,20 @@ fs.writeFileSync(FILE_IMAGE, initialFileContent, (err) => {
 
 // step 3 - move the file to another folder
 moveFileToFolder(FILE_IMAGE, FOLDER1);
+
+// GENERATE NUMBERS FILE
+const allNumbers = generatePairs(1, 5, 10, 20);
+const isCorrectValues = typeof allNumbers === 'object';
+
+if (isCorrectValues) {
+  fs.writeFileSync(`${FOLDER1}/${NUMBERS}`, initialFileContent);
+
+  allNumbers.forEach(([min, max]) => {
+    for (let i = min; i <= max; i++) {
+      fs.appendFileSync(`${FOLDER1}/${NUMBERS}`, `${i}\n`);
+    }
+  });
+}
 
 request(URL, (error, res, body) => {
   if (!error && res.statusCode === 200) {
